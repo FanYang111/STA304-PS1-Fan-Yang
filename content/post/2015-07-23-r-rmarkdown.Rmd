@@ -43,7 +43,7 @@ COVID19cases
 Covid-19 has had a huge influence on our daily life. The purpose of this project is to analysis covid-19 cases to find the age group of infected people, infection sources, hospital rate, etc. By analysis, close contact is the easiest way to get infected. Therefore it is imnportant to have self-protection.
 
 # PartII. Introduction
-It has been over 9 months since the outbreak of COVID-19. As the data from Tencent news, more than 32 million people get infected, with over 980 thousand people died. Companies ask their employee to work online, people can not eat in restaurants, big offline parties are strictly forbade by the government, even schools use online classes to replace in person teaching. When going out, face masks are recommended to avoid getting infected.
+It has been over 9 months since the outbreak of COVID-19. As the data from Tencent news, more than 32 million people get infected, with over 990 thousand people died. Companies ask their employee to work online, people can not eat in restaurants, big offline parties are strictly forbade by the government, even schools use online classes to replace in person teaching. When going out, face masks are recommended to avoid getting infected.
 The purpose of this project is to study the covid-19 cases in Toronto. The data is divided into two groups, men for one group and women for another. They are analyzed separately and are compared.
 
 # PartIII. Data Summarization
