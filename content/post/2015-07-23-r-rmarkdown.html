@@ -1,0 +1,133 @@
+---
+title: "Analysis of Covid-19 Cases in Toronto"
+author: "Fan Yang"
+date: 2020-09-23T21:13:14-05:00
+categories: ["R"]
+tags: ["R Markdown", "plot", "regression"]
+---
+
+
+
+<div id="parti.-abstract" class="section level1">
+<h1>PartI. Abstract</h1>
+<p>Covid-19 has had a huge influence on our daily life. The purpose of this project is to analysis covid-19 cases to find the age group of infected people, infection sources, hospital rate, etc. By analysis, close contact is the easiest way to get infected. Therefore it is imnportant to have self-protection.</p>
+</div>
+<div id="partii.-introduction" class="section level1">
+<h1>PartII. Introduction</h1>
+<p>It has been over 9 months since the outbreak of COVID-19. As the data from Tencent news, more than 32 million people get infected, with over 980 thousand people died. Companies ask their employee to work online, people can not eat in restaurants, big offline parties are strictly forbade by the government, even schools use online classes to replace in person teaching. When going out, face masks are recommended to avoid getting infected.
+The purpose of this project is to study the covid-19 cases in Toronto. The data is divided into two groups, men for one group and women for another. They are analyzed separately and are compared.</p>
+</div>
+<div id="partiii.-data-summarization" class="section level1">
+<h1>PartIII. Data Summarization</h1>
+<pre class="r"><code>table(COVID19cases$Classification)
+## 
+## CONFIRMED  PROBABLE 
+##     16485      1387
+table(COVID19cases$`Client Gender`)
+## 
+##      FEMALE        MALE       OTHER TRANSGENDER     UNKNOWN 
+##        9427        8184           6           5         250
+table(COVID19cases$`Outbreak Associated`)
+## 
+## Outbreak Associated            Sporadic 
+##                5974               11898
+table(COVID19cases$`Ever Hospitalized`)
+## 
+##    No   Yes 
+## 15882  1990
+table(COVID19cases$`Ever in ICU`)
+## 
+##    No   Yes 
+## 17444   428
+table(COVID19cases$`Ever Intubated`)
+## 
+##    No   Yes 
+## 17579   293
+table(COVID19cases$Outcome)
+## 
+##   ACTIVE    FATAL RESOLVED 
+##     1254     1178    15440
+table(COVID19cases$`Currently Hospitalized`)
+## 
+##    No   Yes 
+## 17838    34
+1990*100/17872
+## [1] 11.13474
+428*100/1990
+## [1] 21.50754
+293*100/428
+## [1] 68.45794</code></pre>
+<p>The data used in this project was from open.toronto.ca. In total, there are 17872 observations in Toronto. 16485 people are confirmed while 1387 are suspected cases. Among them, there are 8184 male, 9427 female, 250 unknown, 6 others and 5 transgenders. 15440 cases are resolved, 1254 cases are active and the rest are fatal. The whole Toronto is divided into 140 regions. It is the ‘Neighbourhood Name’ variable in the dataset. Among all the observations, 1990 people go to hospital, which takes up 11.13474% of the whole. 428 people go to ICU. This is 21.50754% of the people who go to hospital. Moreover, only 293 people are intubated, which takes up 68.45794% of people who go to ICU. Currently, there are only 34 people in the hospital.</p>
+<pre class="r"><code>infection_method&lt;-COVID19cases$`Source of Infection`
+ggplot(data=COVID19cases)+aes(x=infection_method)+geom_bar(color=&#39;Black&#39;,fill=&#39;Light Blue&#39;)+coord_flip()+labs(title = &quot;FigureI. Sources that Infect Covid_19&quot;)</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code>Age_group&lt;-COVID19cases$`Age Group`
+ggplot(data=COVID19cases)+aes(x=Age_group)+geom_bar(color=&#39;Black&#39;,fill=&#39;white&#39;)+coord_flip()+labs(title = &quot;FigureII. Age of People Get Infected&quot;)</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-2-2.png" width="672" />
+From the first bar plot, it is obvious that close contact causes over 6000 cases, which takes up more than one-third of the total infection. The second source that causes most cases is outbreak associated, which also leads to neally 6000 cases. Institutional is the hardest way to get infected.
+The second plot indicates that people between 20 to 29 years are most susceptible to infection. People aged between 20 and 59 years old are concentrated areas of infection.The fewest people who get infected are 90 years and older.</p>
+</div>
+<div id="partiv.-data-analysis" class="section level1">
+<h1>PartIV. Data Analysis</h1>
+<ol style="list-style-type: decimal">
+<li>Base on Male Cases</li>
+</ol>
+<pre class="r"><code>gender&lt;-COVID19cases$`Client Gender`
+data_male&lt;-filter(COVID19cases,gender==&#39;MALE&#39;)
+x&lt;-as.numeric(table(data_male$`Age Group`))
+piepercent&lt;- paste(round(100*x/sum(x), 2))
+pie(x, labels = piepercent, main = &quot;FigureIII. Age Group of Male&quot;,col = rainbow(length(x)))
+legend(&quot;topright&quot;, c(&#39;19 and younger&#39;, &#39;20 to 29&#39;, &#39;30 to 39&#39;, &#39;40 to 49&#39;, &#39;50 to 59&#39;, &#39;60 to 69&#39;, &#39;70 to 79&#39;, &#39;80 to 89&#39;, &#39;90 and older&#39;,&#39;NA&#39;), cex = 0.8,fill =rainbow(length(x)))</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code>infection_method_male&lt;-data_male$`Source of Infection`
+ggplot(data=data_male)+aes(x=infection_method_male)+geom_bar(color=&#39;black&#39;,fill=&#39; red&#39;)+coord_flip()+labs(title = &quot;FigureIV. Sources that Infect Covid_19 of Male&quot;)</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<pre class="r"><code>table(data_male$`Ever Hospitalized`)
+## 
+##   No  Yes 
+## 7126 1058
+table(data_male$Outcome)
+## 
+##   ACTIVE    FATAL RESOLVED 
+##      629      533     7022
+1058/(7216+1058)
+## [1] 0.1278704
+533/(7126+1058)
+## [1] 0.06512708</code></pre>
+<p>It is significant that male with age over 90 years old takes up the smallest percentage, which is only 3.27%. Males age between 20 to 29 years old take up 18.87%, which is the largest group that get infected. 64.02% of males who get infected is within 20 and 49 years old. When check the infection sources. Close contact causes over 3000 cases, which is nearly 50% of total infections. In total, there are only 1058 males go to hospital, which is 12.78704% of total males. This is slightly higher than the death rate of total number of observations. There are 7022 males resolved, 629 are still active are the rest are fatal. The death rate is 6.512708%.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Base on Female Cases</li>
+</ol>
+<pre class="r"><code>gender&lt;-COVID19cases$`Client Gender`
+data_female&lt;-filter(COVID19cases,gender==&#39;FEMALE&#39;)
+y&lt;-as.numeric(table(data_female$`Age Group`))
+piepercent&lt;- paste(round(100*y/sum(y), 2))
+pie(y, labels = piepercent, main = &quot;FigureV. Age Group of Male&quot;,col = rainbow(length(y)))
+legend(&quot;topright&quot;, c(&#39;19 and younger&#39;, &#39;20 to 29&#39;, &#39;30 to 39&#39;, &#39;40 to 49&#39;, &#39;50 to 59&#39;, &#39;60 to 69&#39;, &#39;70 to 79&#39;, &#39;80 to 89&#39;, &#39;90 and older&#39;,&#39;NA&#39;), cex = 0.8,fill =rainbow(length(y)))</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>infection_method_female&lt;-data_female$`Source of Infection`
+ggplot(data=data_female)+aes(x=infection_method_female)+geom_bar(col=&#39;black&#39;,fill=&#39;blue &#39;)+coord_flip()+labs(title = &quot;FigureVI. Sources that Infect Covid_19 of Female&quot;)</code></pre>
+<p><img src="/post/2015-07-23-r-rmarkdown_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<pre class="r"><code>table(data_female$`Ever Hospitalized`)
+## 
+##   No  Yes 
+## 8504  923
+table(data_female$Outcome)
+## 
+##   ACTIVE    FATAL RESOLVED 
+##      615      610     8202
+923/(923+8054)
+## [1] 0.1028183
+610/(923+8054)
+## [1] 0.06795143</code></pre>
+<p>Only 5.88% infected women is between 70 and 79 years old. This takes up the smallest percentage. The infected women between 20 to 29 years and 50 to 59 years are approximately the same, which are 1486（15.78%) and 1483(15.75%). Most of the infected women are also within 20 to 59 years old. When checking the source of infection, both close contact and outbreak associated cause over 3000 cases. These two sources cause more than two thirds of the total infection in women. Only 923 women go to hospital because of Covid-19. This takes up 10.28183% of total number of women. 610(6.795143%) women died because of the pandemic.</p>
+</div>
+<div id="partv.-conclusion" class="section level1">
+<h1>PartV. Conclusion</h1>
+<p>All three ‘infected source’ plots show that outbreak associated and close contact are the main reason to cause infection. Age graphs illustrate that people between 20 and 59 years old are most infected group. Thus, it is important to get away from others when going out. Face masks and gloves can reduce the infection rate effectively. The hospital rate of men is slightly higher than that of women, while the death rate is slightly lower.</p>
+</div>
+<div id="reference" class="section level1">
+<h1>Reference</h1>
+<p>全球新冠肺炎，Retrived Sep,26th,2020,from: <a href="https://feiyan.wecity.qq.com/wuhan/dist/index.html#/?tab=chengshiyiqing&amp;randId=0.6725064762788395" class="uri">https://feiyan.wecity.qq.com/wuhan/dist/index.html#/?tab=chengshiyiqing&amp;randId=0.6725064762788395</a>
+```</p>
+</div>
